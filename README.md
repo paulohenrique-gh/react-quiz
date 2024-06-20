@@ -4,6 +4,9 @@
 
 ### Concepts:
 
+- useReducer
+- Refactoring useState with useReducer to manage related pieces of state
+
 
 Aditional exercises: 
 
