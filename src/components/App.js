@@ -8,6 +8,10 @@ import Question from "./Question";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
+import Footer from "./Footer";
+import Timer from "./Timer";
+
+const SECS_PER_QUESTION = 30;
 
 function reducer(state, action) {
   switch (action.type) {
@@ -18,7 +22,11 @@ function reducer(state, action) {
       return { ...state, status: "error" };
     }
     case "start": {
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        secondsRemaining: state.questions.length * SECS_PER_QUESTION,
+      };
     }
     case "newAnswer": {
       const question = state.questions.at(state.index);
@@ -47,7 +55,20 @@ function reducer(state, action) {
       };
     }
     case "restart": {
-      return { ...state, index: 0, answer: null, points: 0, status: "active" };
+      return {
+        ...state,
+        index: 0,
+        answer: null,
+        points: 0,
+        status: "active",
+        secondsRemaining: state.questions.length * SECS_PER_QUESTION,
+      };
+    }
+    case "tick": {
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+      };
     }
     default: {
       throw new Error("Action unknown");
@@ -62,18 +83,20 @@ const initialState = {
   answer: null,
   points: 0,
   highscore: 0,
+  secondsRemaining: null,
 };
 
 export default function App() {
-  const [{ questions, status, index, answer, points, highscore }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { questions, status, index, answer, points, highscore, secondsRemaining },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce(
     (acc, curQuestion) => acc + curQuestion.points,
     0
   );
-  console.log(maxPossiblePoints);
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -89,6 +112,19 @@ export default function App() {
 
     fetchQuestions();
   }, []);
+
+  // useEffect(() => {
+  //   let timerInSeconds = 300;
+
+  //   if (status === "active") {
+  //     setInterval(() => {
+  //       const minutes = timerInSeconds / 60;
+  //       const seconds = timerInSeconds % 60;
+
+  //       dispatch({ type: "updateTimer", payload: `${minutes}:${seconds}` });
+  //     }, 1000);
+  //   }
+  // }, [timer]);
 
   return (
     <div className="app">
@@ -113,12 +149,15 @@ export default function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextButton
-              dispatch={dispatch}
-              answer={answer}
-              numQuestions={numQuestions}
-              index={index}
-            />
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+              <NextButton
+                dispatch={dispatch}
+                answer={answer}
+                numQuestions={numQuestions}
+                index={index}
+              />
+            </Footer>
           </>
         )}
 
