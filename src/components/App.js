@@ -24,10 +24,10 @@ function reducer(state, action) {
 }
 
 // 'loading', 'error', 'ready', 'active', 'finished'
-const initialState = { questions: [], status: "loading" };
+const initialState = { questions: [], status: "loading", index: 0 };
 
 export default function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index }, dispatch] = useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
 
@@ -46,10 +46,6 @@ export default function App() {
     fetchQuestions();
   }, []);
 
-  function handleStartQuiz() {
-    dispatch({ type: "start" });
-  }
-
   return (
     <div className="app">
       <Header />
@@ -59,7 +55,7 @@ export default function App() {
         {status === "ready" && (
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
-        {status === "active" && <Question questions={questions} />}
+        {status === "active" && <Question question={questions.at(index)}/>}
       </Main>
     </div>
   );
