@@ -1,14 +1,12 @@
-import Option from "./Option";
+import Options from "./Options";
 
-function Question({ question }) {
+function Question({ question, answer, dispatch }) {
   return (
     <div>
       <h4>{question.question}</h4>
 
       <div className="options">
-        {question.options.map((option, index) => (
-          <Option option={option} key={option} isCorrect={index === question.correctOption} />
-        ))}
+        <Options question={question} dispatch={dispatch} answer={answer} />
       </div>
     </div>
   );
