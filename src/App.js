@@ -1,9 +1,10 @@
 import { useReducer, useEffect } from "react";
 import Header from "./Header";
 import Main from "./Main";
-import Loader from "./Loader"
-import Error from './Error'
+import Loader from "./Loader";
+import Error from "./Error";
 import StartScreen from "./StartScreen";
+import Question from "./Question";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -12,6 +13,9 @@ function reducer(state, action) {
     }
     case "dataFailed": {
       return { ...state, status: "error" };
+    }
+    case "start": {
+      return { ...state, status: "active" };
     }
     default: {
       throw new Error("Action unknown");
@@ -25,7 +29,7 @@ const initialState = { questions: [], status: "loading" };
 export default function App() {
   const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
 
-  const numQuestions = questions.length
+  const numQuestions = questions.length;
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -42,13 +46,20 @@ export default function App() {
     fetchQuestions();
   }, []);
 
+  function handleStartQuiz() {
+    dispatch({ type: "start" });
+  }
+
   return (
     <div className="app">
       <Header />
       <Main>
-        {status === 'loading' && <Loader />}
-        {status === 'error' && <Error />}
-        {status === 'ready' && <StartScreen numQuestions={numQuestions} />}
+        {status === "loading" && <Loader />}
+        {status === "error" && <Error />}
+        {status === "ready" && (
+          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
+        )}
+        {status === "active" && <Question questions={questions} />}
       </Main>
     </div>
   );
