@@ -113,19 +113,6 @@ export default function App() {
     fetchQuestions();
   }, []);
 
-  // useEffect(() => {
-  //   let timerInSeconds = 300;
-
-  //   if (status === "active") {
-  //     setInterval(() => {
-  //       const minutes = timerInSeconds / 60;
-  //       const seconds = timerInSeconds % 60;
-
-  //       dispatch({ type: "updateTimer", payload: `${minutes}:${seconds}` });
-  //     }, 1000);
-  //   }
-  // }, [timer]);
-
   return (
     <div className="app">
       <Header />
