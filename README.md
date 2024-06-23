@@ -10,6 +10,8 @@
 
 Aditional exercises: 
 
+https://codesandbox.io/p/sandbox/react-challenge-usereducer-bank-starter-forked-z54sks?file=%2Fsrc%2FApp.js
+
 
 ## Available Scripts
 
