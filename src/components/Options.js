@@ -1,4 +1,8 @@
-function Options({ question, dispatch, answer }) {
+import { useQuiz } from "../contexts/QuizContext";
+
+function Options({ question }) {
+  const { answer, registerAnswer } = useQuiz();
+
   const hasAnswered = answer !== null;
 
   return (
@@ -14,7 +18,7 @@ function Options({ question, dispatch, answer }) {
           }`}
           key={option}
           disabled={answer !== null}
-          onClick={() => dispatch({ type: "newAnswer", payload: index })}
+          onClick={() => registerAnswer(index)}
         >
           {option}
         </button>
